@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2026 aas-package3-python AUTHORS
+#
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aas-package3"
+# NOTE (mristin):
+# Do not forget to update the CHANGELOG.rst and __init__.py!
+version = "1.0.0rc1"
+description = "Read and write the packaged file format (AASX) of an Asset Administration Shell V3."
+readme = "README.rst"
+authors = [
+    {name = "Marko Ristin", email = "marko@ristin.ch"},
+]
+license = {text = "MIT"}
+keywords = ["asset administration shell", "aasx", "opc", "industry 4.0", "industrie 4.0", "i4.0"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/eclipse-aascw/aas-package3-python"
+Documentation = "https://eclipse-aascw.github.io/aas-package3-python/"
+
+[tool.setuptools.packages.find]
+include = [
+    "aas_package3",
+]
+
+[tool.setuptools.package-data]
+aas_package3 = ["py.typed"]

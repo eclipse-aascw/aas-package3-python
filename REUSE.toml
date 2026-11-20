@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: 2026 aas-package3-python AUTHORS
+#
+# SPDX-License-Identifier: MIT
+
+version = 1
+
+# Prose and metadata where a header would end up in the rendered output
+# (e.g., README shown on PyPI) or which can not carry a comment.
+[[annotations]]
+path = [
+    ".gitignore",
+    "AUTHORS",
+    "README.rst",
+    "CHANGELOG.rst",
+    "CONTRIBUTING.rst",
+    "aas_package3/py.typed",
+    "docs/requirements.txt",
+    "docs/source/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 aas-package3-python AUTHORS"
+SPDX-License-Identifier = "MIT"
+
+# The packages written by aas-package3-csharp and aas-package3-golang serve as
+# test fixtures for interoperability. ZIP archives can not carry a comment.
+[[annotations]]
+path = "dev/test_data/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 aas-package3-python AUTHORS"
+SPDX-License-Identifier = "MIT"
