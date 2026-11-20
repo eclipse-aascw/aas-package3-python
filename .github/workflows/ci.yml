@@ -1,0 +1,86 @@
+# SPDX-FileCopyrightText: 2026 aas-package3-python AUTHORS
+#
+# SPDX-License-Identifier: MIT
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+permissions:
+  contents: read
+
+jobs:
+  Execute-continuous-integration:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install the package with development dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install -e .
+          pip3 install -e dev
+
+      - name: Install coveralls
+        run: pip3 install --upgrade coveralls
+        if: github.event.repository.fork == false
+
+      # NOTE (mristin):
+      # We introduce this check as a fast-fail.
+      - name: Check that __init__.py and pyproject.toml are consistent
+        run: |
+          python3 dev/continuous_integration/precommit.py \
+            --select check-init-and-pyproject-consistent
+
+      - name: Run the other checks except testing
+        run: |
+          python3 dev/continuous_integration/precommit.py \
+            --skip check-init-and-pyproject-consistent test
+
+      - name: Run tests
+        run: |
+          python3 dev/continuous_integration/precommit.py --select test
+
+      # NOTE (mristin):
+      # We run the tests also with -O to make sure that nothing relies on
+      # the asserts being executed.
+      - name: Run tests with optimizations
+        run: |
+          cd dev
+          python3 -O -m unittest discover --start-directory tests --top-level-directory .
+
+      - name: Upload Coverage
+        run: coveralls --service=github
+        if: github.event.repository.fork == false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
+          COVERALLS_PARALLEL: true
+
+  Finish-Coveralls:
+    name: Finish Coveralls
+    needs: Execute-continuous-integration
+    runs-on: ubuntu-latest
+    container: python:3-slim
+    if: github.event.repository.fork == false
+    steps:
+      - name: Finish Coveralls
+        run: |
+          pip3 install --upgrade coveralls
+          coveralls --finish --service=github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 aas-package3-python AUTHORS
+#
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aas-package3-dev"
+version = "0.0.1"
+description = "Develop aas-package3."
+requires-python = ">=3.10"
+
+dependencies = [
+    "black==22.6.0",
+    "mypy==2.1.0",
+    "ruff==0.17.2",
+    "ssort==0.12.3",
+    "coverage>=7,<8",
+    "twine",
+    "build",
+    "reuse==6.3.0",
+    "tomli>=2; python_version < '3.11'",
+]
+
+[tool.setuptools]
+packages = [
+    "tests",
+    "continuous_integration",
+    "live_tests",
+]
+
+# NOTE (mristin):
+# We put the configuration of mypy and ruff in separate files as it is a nightmare
+# to configure them with pyproject.toml not living in the current working directory
+# which is the repository root.
